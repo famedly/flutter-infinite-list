@@ -28,14 +28,16 @@ class _HomePageState extends State<HomePage> {
   final scrollController = AutoScrollController();
   late final InfiniteListController<String> infiniteController;
 
-  List<String> events = [];
+  List<String> events = ["a", "b", "c", "d", "e", "f", "h", "i"];
 
   @override
   void initState() {
     super.initState();
 
     infiniteController = InfiniteListController(
-        events: events, scrollController: scrollController);
+        events: events,
+        scrollController: scrollController,
+        getId: (String element) => element);
   }
 
   int lastItem = 0;

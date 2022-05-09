@@ -4,15 +4,18 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 
 class InfiniteListController<T> {
   final List<T> events;
-
   final AutoScrollController scrollController;
 
-  T? get centerEvent => _centerEvent;
-  T? _centerEvent;
+  String? get centerEventId => _centerEvent;
+  String? _centerEvent;
+
+  bool allowPopingWhenBottom = false; // by default, new items, won't
+  // move the list view. You should set a scroll listener and enable or disable
+  // it as needed.
 
   void setCenterEvent(T item) {
-    if (events.contains(item)) {
-      _centerEvent = item;
+    if (events.firstWhere((e) => getId(item) == getId(e)) != -1) {
+      _centerEvent = getId(item);
       final pos = isIndexDisplayed(events.indexOf(item), 0);
       if (pos != null) {
         var delta = scrollController.position.pixels - pos;
@@ -25,11 +28,18 @@ class InfiniteListController<T> {
     }
   }
 
-  int get startChildrenCount {
-    if (_centerEvent == null && events.isNotEmpty) {
-      _centerEvent = events.first; // initial value
+  void _setCenterIfNeeded() {
+    if (_centerEvent == null && events.isNotEmpty || allowPopingWhenBottom) {
+      _centerEvent = getId(events.first); // initial value
     }
-    var pos = centerEvent != null ? events.indexOf(centerEvent!) : -1;
+  }
+
+  int get startChildrenCount {
+    _setCenterIfNeeded();
+
+    var pos = _centerEvent != null
+        ? events.indexWhere((item) => getId(item) == _centerEvent)
+        : -1;
     if (pos != -1) {
       return pos;
     }
@@ -39,12 +49,15 @@ class InfiniteListController<T> {
 
   int get endChildrenCount => events.length - startChildrenCount;
 
-  InfiniteListController({
-    T? centerEvent,
-    required this.events,
-    required this.scrollController,
-  }) {
-    _centerEvent = centerEvent;
+  InfiniteListController(
+      {T? centerEventId,
+      required this.events,
+      required this.scrollController,
+      required this.getId}) {
+    if (centerEventId != null) {
+      _centerEvent = getId(centerEventId);
+    }
+    _setCenterIfNeeded();
   }
 
   int getEndIndex(int index) {
@@ -67,6 +80,8 @@ class InfiniteListController<T> {
     final revealedOffset = viewport.getOffsetToReveal(renderBox, alignment);
     return revealedOffset.offset;
   }
+
+  final String Function(T item) getId;
 
   /// Get the last event actually displayed on screen
   T? getLastItemDisplayedOnScreen() {
