@@ -26,7 +26,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final scrollController = AutoScrollController();
-  late final InfiniteListViewController<String> infiniteController;
+  late final InfiniteListController<String> infiniteController;
 
   List<String> events = [];
 
@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    infiniteController = InfiniteListViewController(
+    infiniteController = InfiniteListController(
         events: events, scrollController: scrollController);
   }
 

@@ -16,7 +16,7 @@ class InfiniteListView<T> extends StatelessWidget {
       : super(key: key);
 
   final Widget Function(int index, ItemPositions position) itemBuilder;
-  final InfiniteListViewController<T> infiniteController;
+  final InfiniteListController<T> infiniteController;
   final bool reversed;
 
   @override

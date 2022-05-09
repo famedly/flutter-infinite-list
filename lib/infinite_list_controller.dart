@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
-class InfiniteListViewController<T> {
+class InfiniteListController<T> {
   final List<T> events;
 
   final AutoScrollController scrollController;
@@ -39,7 +39,7 @@ class InfiniteListViewController<T> {
 
   int get endChildrenCount => events.length - startChildrenCount;
 
-  InfiniteListViewController({
+  InfiniteListController({
     T? centerEvent,
     required this.events,
     required this.scrollController,
