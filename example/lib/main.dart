@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:infinite_list_view/infinite_list_view.dart';
+import 'package:infinite_list/infinite_list.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 void main() {
@@ -66,11 +66,11 @@ class _HomePageState extends State<HomePage> {
         InfiniteListView<String>(
             infiniteController: infiniteController,
             reversed: true,
-            itemBuilder: (int index, itemPosition position) {
+            itemBuilder: (int index, ItemPositions position) {
               switch (position) {
-                case itemPosition.start:
+                case ItemPositions.start:
                   return const Text("Start");
-                case itemPosition.item:
+                case ItemPositions.item:
                   return ListTile(
                       onTap: () {
                         infiniteController.setCenterEvent(events[index]);
@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> {
                       },
                       title: Text(events[index]));
 
-                case itemPosition.end:
+                case ItemPositions.end:
                   return const Text("End");
               }
             }),
