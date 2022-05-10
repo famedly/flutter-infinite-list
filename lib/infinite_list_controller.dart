@@ -16,7 +16,7 @@ class InfiniteListController<T> {
   void setCenterEvent(T item) {
     if (events.firstWhere((e) => getId(item) == getId(e)) != -1) {
       _centerEvent = getId(item);
-      final pos = isIndexDisplayed(events.indexOf(item), 0);
+      final pos = getDistanceToAlignement(events.indexOf(item), 0);
       if (pos != null) {
         var delta = scrollController.position.pixels - pos;
         if (startChildrenCount == 0) {
@@ -68,8 +68,8 @@ class InfiniteListController<T> {
     return startChildrenCount - index - 1;
   }
 
-  /// Custom logic to see if thi specific event is in the render view
-  double? isIndexDisplayed(int index, double alignment) {
+  /// Get the distance between the alignement line and the actual element.
+  double? getDistanceToAlignement(int index, double alignment) {
     final ctx = scrollController.tagMap[index]?.context;
     if (ctx == null) return null;
 
@@ -83,11 +83,11 @@ class InfiniteListController<T> {
 
   final String Function(T item) getId;
 
-  /// Get the last event actually displayed on screen
-  T? getLastItemDisplayedOnScreen({double alignment = 0}) {
+  /// Get the element closest to the alignement line
+  T? getClosestElementToAlignement({double alignment = 0}) {
     T? e;
     for (int i = 0; i < events.length; i++) {
-      final off = isIndexDisplayed(i, alignment);
+      final off = getDistanceToAlignement(i, alignment);
       final event = events[i];
 
       if (off != null) {

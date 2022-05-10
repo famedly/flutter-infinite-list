@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> {
 
   String? lastElement;
   void scrollListener() {
-    final el = infiniteController.getLastItemDisplayedOnScreen();
+    final el = infiniteController.getClosestElementToAlignement();
 
     if (el != lastElement) {
       setState(() {
