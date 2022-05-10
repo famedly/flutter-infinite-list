@@ -85,10 +85,7 @@ class InfiniteListView<T> extends StatelessWidget {
                 key: key,
                 controller: infiniteController.scrollController,
                 index: index,
-                child: Container(
-                  color: Colors.red,
-                  child: itemBuilder(index, position),
-                ),
+                child: itemBuilder(index, position),
               );
             },
                 childCount: infiniteController.endChildrenCount + 2,
