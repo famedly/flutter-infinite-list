@@ -86,13 +86,13 @@ class InfiniteListController<T> {
   /// Get the last event actually displayed on screen
   T? getLastItemDisplayedOnScreen() {
     T? e;
-    for (int i = 0; i < startChildrenCount; i++) {
+    for (int i = 0; i < events.length; i++) {
       final off = isIndexDisplayed(i, 0);
       final event = events[i];
 
       if (off != null) {
         final delta = off - scrollController.position.pixels;
-        if (delta > 0) {
+        if (delta < 0) {
           e = event;
         } else if (e != null) {
           return e;
@@ -100,19 +100,6 @@ class InfiniteListController<T> {
       }
     }
 
-    for (int i = startChildrenCount; i < events.length; i++) {
-      final off = isIndexDisplayed(i, 0);
-      if (off != null) {
-        final delta = off - scrollController.position.pixels;
-        final event = events[i];
-
-        if (delta < 0) {
-          e = event;
-        } else {
-          return e;
-        }
-      }
-    }
     return null;
   }
 }

@@ -30,6 +30,8 @@ class _HomePageState extends State<HomePage> {
 
   List<String> events = ["a", "b", "c", "d", "e", "f", "h", "i"];
 
+  bool reversed = true;
+
   @override
   void initState() {
     super.initState();
@@ -37,7 +39,11 @@ class _HomePageState extends State<HomePage> {
     infiniteController = InfiniteListController(
         events: events,
         scrollController: scrollController,
-        getId: (String element) => element);
+        getId: (String item) {
+          return item;
+        });
+
+    scrollController.addListener(scrollListener);
   }
 
   int lastItem = 0;
@@ -60,6 +66,17 @@ class _HomePageState extends State<HomePage> {
     setState(() {});
   }
 
+  String? lastElement;
+  void scrollListener() {
+    final el = infiniteController.getLastItemDisplayedOnScreen();
+
+    if (el != lastElement) {
+      setState(() {
+        lastElement = el;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,7 +84,7 @@ class _HomePageState extends State<HomePage> {
       children: [
         InfiniteListView<String>(
             infiniteController: infiniteController,
-            reversed: true,
+            reversed: reversed,
             itemBuilder: (int index, ItemPositions position) {
               switch (position) {
                 case ItemPositions.start:
@@ -89,14 +106,14 @@ class _HomePageState extends State<HomePage> {
             top: 20,
             child: IconButton(
               icon: const Icon(Icons.arrow_upward),
-              onPressed: _addNewItem,
+              onPressed: reversed ? _addOldItem : _addNewItem,
             )),
         Positioned(
             right: 20,
             bottom: 20,
             child: IconButton(
               icon: const Icon(Icons.arrow_downward),
-              onPressed: _addOldItem,
+              onPressed: reversed ? _addNewItem : _addOldItem,
             )),
         Positioned(
             left: 20,
@@ -111,6 +128,14 @@ class _HomePageState extends State<HomePage> {
                 });
               },
             )),
+        Positioned(
+            right: 80,
+            bottom: 20,
+            child: Card(
+                child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(lastElement ?? ''),
+            ))),
         Positioned(
             left: 20,
             top: 80,
