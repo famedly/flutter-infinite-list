@@ -84,10 +84,10 @@ class InfiniteListController<T> {
   final String Function(T item) getId;
 
   /// Get the last event actually displayed on screen
-  T? getLastItemDisplayedOnScreen() {
+  T? getLastItemDisplayedOnScreen({double alignment = 0}) {
     T? e;
     for (int i = 0; i < events.length; i++) {
-      final off = isIndexDisplayed(i, 0);
+      final off = isIndexDisplayed(i, alignment);
       final event = events[i];
 
       if (off != null) {
