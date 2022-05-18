@@ -100,6 +100,9 @@ class InfiniteListController<T> {
       }
     }
 
+    // we didn't found one, we may have reached the bottom
+    if (events.isNotEmpty) return events.first;
+
     return null;
   }
 }
