@@ -90,12 +90,22 @@ class _HomePageState extends State<HomePage> {
                 case ItemPositions.start:
                   return const Text("Start");
                 case ItemPositions.item:
-                  return ListTile(
-                      onTap: () {
-                        infiniteController.setCenterEvent(events[index]);
-                        setState(() {});
-                      },
-                      title: Text(events[index]));
+                  return MaterialButton(
+                    onPressed: () {
+                      infiniteController.setCenterEvent(events[index]);
+                      setState(() {});
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                          color: Colors.blue,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(events[index],
+                                style: const TextStyle(color: Colors.white)),
+                          )),
+                    ),
+                  );
 
                 case ItemPositions.end:
                   return const Text("End");
@@ -134,7 +144,7 @@ class _HomePageState extends State<HomePage> {
             child: Card(
                 child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(lastElement ?? ''),
+              child: Text("Last element ${lastElement ?? ''}", maxLines: 1),
             ))),
         Positioned(
             right: 80,
@@ -145,6 +155,7 @@ class _HomePageState extends State<HomePage> {
               child: SizedBox(
                 width: 200,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text("Experimentation box"),
                     SwitchListTile(
@@ -152,7 +163,11 @@ class _HomePageState extends State<HomePage> {
                         onChanged: (value) => setState(() {
                               reversed = value;
                             }),
-                        title: const Text("Reversed"))
+                        title: const Text("Reversed")),
+                    ListTile(
+                      title: const Text("Anchor"),
+                      subtitle: Text(infiniteController.centerEventId ?? ''),
+                    )
                   ],
                 ),
               ),
