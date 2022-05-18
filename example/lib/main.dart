@@ -137,14 +137,26 @@ class _HomePageState extends State<HomePage> {
               child: Text(lastElement ?? ''),
             ))),
         Positioned(
-            left: 20,
-            top: 80,
-            child: IconButton(
-              icon: const Icon(Icons.swipe),
-              onPressed: () {
-                //infiniteController.switchStart();
-              },
-            ))
+            right: 80,
+            top: 20,
+            child: Card(
+                child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                width: 200,
+                child: Column(
+                  children: [
+                    const Text("Experimentation box"),
+                    SwitchListTile(
+                        value: reversed,
+                        onChanged: (value) => setState(() {
+                              reversed = value;
+                            }),
+                        title: const Text("Reversed"))
+                  ],
+                ),
+              ),
+            )))
       ],
     ));
   }
