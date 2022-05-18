@@ -9,9 +9,11 @@ class InfiniteListController<T> {
   String? get centerEventId => _centerEvent;
   String? _centerEvent;
 
-  bool allowPopingWhenBottom = false; // by default, new items, won't
-  // move the list view. You should set a scroll listener and enable or disable
-  // it as needed.
+  /// Control if new items will be added to the upper list when scrolled to bottom.
+  /// This will have the consequences to bring the element into view imediately.
+  /// If false, the element will be added on the bottom list and the user will
+  /// need to scroll to see the new element.
+  bool addNewItemsWhenBottom = false;
 
   void setCenterEvent(T item) {
     if (events.firstWhere((e) => getId(item) == getId(e)) != -1) {
@@ -29,7 +31,7 @@ class InfiniteListController<T> {
   }
 
   void _setCenterIfNeeded() {
-    if (_centerEvent == null && events.isNotEmpty || allowPopingWhenBottom) {
+    if (_centerEvent == null && events.isNotEmpty || addNewItemsWhenBottom) {
       _centerEvent = getId(events.first); // initial value
     }
   }
