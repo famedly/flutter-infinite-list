@@ -1,7 +1,9 @@
 name: infinite_list
-description: A new Flutter package project.
+description: A widget to display infinite lists.
 version: 0.0.1
-homepage:
+homepage: https://famedly.com
+repository: https://gitlab.com/famedly/company/frontend/libraries/infinite-list
+
 
 environment:
   sdk: ">=2.16.2 <3.0.0"
