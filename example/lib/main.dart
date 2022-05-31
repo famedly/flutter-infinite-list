@@ -37,11 +37,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     infiniteController = InfiniteListController(
-        events: events,
-        scrollController: scrollController,
-        getId: (String item) {
-          return item;
-        });
+        items: events, scrollController: scrollController);
 
     scrollController.addListener(scrollListener);
   }
@@ -68,7 +64,7 @@ class _HomePageState extends State<HomePage> {
 
   String? lastElement;
   void scrollListener() {
-    final el = infiniteController.getClosestElementToAlignement();
+    final el = infiniteController.getClosestElementToAlignment();
 
     if (el != lastElement) {
       setState(() {
@@ -82,10 +78,11 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         body: Stack(
       children: [
-        InfiniteListView<String>(
+        InfiniteListView(
             infiniteController: infiniteController,
             reversed: reversed,
-            itemBuilder: (int index, ItemPositions position) {
+            itemBuilder:
+                (BuildContext context, int index, ItemPositions position) {
               switch (position) {
                 case ItemPositions.start:
                   return const Text("Start");
@@ -169,9 +166,9 @@ class _HomePageState extends State<HomePage> {
                       subtitle: Text(infiniteController.centerEventId ?? ''),
                     ),
                     SwitchListTile(
-                        value: infiniteController.addNewItemsWhenBottom,
+                        value: infiniteController.disableSecondList,
                         onChanged: (value) => setState(() {
-                              infiniteController.addNewItemsWhenBottom = value;
+                              infiniteController.disableSecondList = value;
                             }),
                         title: const Text("Add new item to bottom")),
                   ],
