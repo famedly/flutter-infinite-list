@@ -15,9 +15,9 @@ code_analyze:
   image: dart
   dependencies: []
   script:
-    - dart pub get
-    - dart format lib/ test/ test_driver/ --set-exit-if-changed
-    - dart analyze
+    - flutter pub get
+    - flutter format lib/ test/ test_driver/ --set-exit-if-changed
+    - flutter analyze
 
 code_quality:
   tags:
