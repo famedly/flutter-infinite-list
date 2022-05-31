@@ -167,7 +167,13 @@ class _HomePageState extends State<HomePage> {
                     ListTile(
                       title: const Text("Anchor"),
                       subtitle: Text(infiniteController.centerEventId ?? ''),
-                    )
+                    ),
+                    SwitchListTile(
+                        value: infiniteController.addNewItemsWhenBottom,
+                        onChanged: (value) => setState(() {
+                              infiniteController.addNewItemsWhenBottom = value;
+                            }),
+                        title: const Text("Add new item to bottom")),
                   ],
                 ),
               ),
