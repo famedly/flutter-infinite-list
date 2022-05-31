@@ -45,6 +45,12 @@ import 'package:scroll_to_index/scroll_to_index.dart';
   ),
 ```
 
+**`itemBuilder`**
+
+Allow building the index element.
+The list view will try to build length + 2 items.
+This means, all the items plus a header and a footer. To distinguish the items and the header and footer, we use `itemPosition` to indicate if we are trying to build the header (`ItemPositions.start`), the footer (`ItemPositions.end`) or an item of the list (`ItemPositions.item`). 
+
 ## Usage
 
 This package defines a center element, this element is the one who will be centered and all the element will be position relative to it. The list view is separated in two list view centered on this specific element. Thus, when a new element is added before the center element, it will move all element before the new element, up. The contrary, if added before the center element.
