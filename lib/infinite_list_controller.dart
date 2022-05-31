@@ -13,7 +13,7 @@ class InfiniteListController<T> {
   /// This will have the consequences to bring the element into view imediately.
   /// If false, the element will be added on the bottom list and the user will
   /// need to scroll to see the new element.
-  bool disableSecondList = false;
+  bool useFirstItemAsCenter = false;
 
   void setCenterEvent(T item) {
     if (items.contains(item)) {
@@ -31,7 +31,7 @@ class InfiniteListController<T> {
   }
 
   void _setCenterIfNeeded() {
-    if (_centerEvent == null && items.isNotEmpty || disableSecondList) {
+    if (_centerEvent == null && items.isNotEmpty || useFirstItemAsCenter) {
       _centerEvent = items.first; // initial value
     }
   }

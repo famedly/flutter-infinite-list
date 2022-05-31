@@ -47,7 +47,7 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 
 ## Usage
 
-This package define a center element, this element is the one who will be centered and all the element will be position relative to it. The list view is separated in two list view centered on this specific element. Thus when a new element is added before the center element, it will move all element before the new element, up. The contrary if added before the center element.
+This package defines a center element, this element is the one who will be centered and all the element will be position relative to it. The list view is separated in two list view centered on this specific element. Thus, when a new element is added before the center element, it will move all element before the new element, up. The contrary, if added before the center element.
 
 ```
 infiniteController.setCenterEvent(item)
@@ -58,7 +58,7 @@ To allow new element to elements to move the element down (or up if reverse), we
 For this, we can set 
 
 ```
-inifiniteController.addNewItemsWhenBottom
+inifiniteController.useFirstItemAsCenter
 ```
 
 to true.  So when new items will be added, all the previous item will be moved down (or up if reverse). However, if we scroll a bit, the element will be added to the other list, so won't be imediately displayed. The user will need to scroll to see it.

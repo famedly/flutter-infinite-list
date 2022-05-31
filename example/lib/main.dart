@@ -166,9 +166,9 @@ class _HomePageState extends State<HomePage> {
                       subtitle: Text(infiniteController.centerEventId ?? ''),
                     ),
                     SwitchListTile(
-                        value: infiniteController.disableSecondList,
+                        value: infiniteController.useFirstItemAsCenter,
                         onChanged: (value) => setState(() {
-                              infiniteController.disableSecondList = value;
+                              infiniteController.useFirstItemAsCenter = value;
                             }),
                         title: const Text("Add new item to bottom")),
                   ],
