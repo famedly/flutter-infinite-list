@@ -3,20 +3,22 @@ import 'package:flutter/rendering.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 class InfiniteListController<T> {
-  final List<T> events;
+  final List<T> items;
   final AutoScrollController scrollController;
 
-  String? get centerEventId => _centerEvent;
-  String? _centerEvent;
+  T? get centerEventId => _centerEvent;
+  T? _centerEvent;
 
-  bool allowPopingWhenBottom = false; // by default, new items, won't
-  // move the list view. You should set a scroll listener and enable or disable
-  // it as needed.
+  /// Control if new items will be added to the upper list when scrolled to bottom.
+  /// This will have the consequences to bring the element into view imediately.
+  /// If false, the element will be added on the bottom list and the user will
+  /// need to scroll to see the new element.
+  bool useFirstItemAsCenter = false;
 
   void setCenterEvent(T item) {
-    if (events.firstWhere((e) => getId(item) == getId(e)) != -1) {
-      _centerEvent = getId(item);
-      final pos = getDistanceToAlignement(events.indexOf(item), 0);
+    if (items.contains(item)) {
+      _centerEvent = item;
+      final pos = getDistanceToAlignment(items.indexOf(item), 0);
       if (pos != null) {
         var delta = scrollController.position.pixels - pos;
         if (startChildrenCount == 0) {
@@ -29,8 +31,8 @@ class InfiniteListController<T> {
   }
 
   void _setCenterIfNeeded() {
-    if (_centerEvent == null && events.isNotEmpty || allowPopingWhenBottom) {
-      _centerEvent = getId(events.first); // initial value
+    if (_centerEvent == null && items.isNotEmpty || useFirstItemAsCenter) {
+      _centerEvent = items.first; // initial value
     }
   }
 
@@ -38,7 +40,8 @@ class InfiniteListController<T> {
     _setCenterIfNeeded();
 
     var pos = _centerEvent != null
-        ? events.indexWhere((item) => getId(item) == _centerEvent)
+        // ignore: null_check_on_nullable_type_parameter
+        ? items.indexOf(_centerEvent!)
         : -1;
     if (pos != -1) {
       return pos;
@@ -47,15 +50,12 @@ class InfiniteListController<T> {
     return 0;
   }
 
-  int get endChildrenCount => events.length - startChildrenCount;
+  int get endChildrenCount => items.length - startChildrenCount;
 
   InfiniteListController(
-      {T? centerEventId,
-      required this.events,
-      required this.scrollController,
-      required this.getId}) {
+      {T? centerEventId, required this.items, required this.scrollController}) {
     if (centerEventId != null) {
-      _centerEvent = getId(centerEventId);
+      _centerEvent = centerEventId;
     }
     _setCenterIfNeeded();
   }
@@ -69,7 +69,7 @@ class InfiniteListController<T> {
   }
 
   /// Get the distance between the alignement line and the actual element.
-  double? getDistanceToAlignement(int index, double alignment) {
+  double? getDistanceToAlignment(int index, double alignment) {
     final ctx = scrollController.tagMap[index]?.context;
     if (ctx == null) return null;
 
@@ -81,14 +81,12 @@ class InfiniteListController<T> {
     return revealedOffset.offset;
   }
 
-  final String Function(T item) getId;
-
   /// Get the element closest to the alignement line
-  T? getClosestElementToAlignement({double alignment = 0}) {
+  T? getClosestElementToAlignment({double alignment = 0}) {
     T? e;
-    for (int i = 0; i < events.length; i++) {
-      final off = getDistanceToAlignement(i, alignment);
-      final event = events[i];
+    for (int i = 0; i < items.length; i++) {
+      final off = getDistanceToAlignment(i, alignment);
+      final event = items[i];
 
       if (off != null) {
         final delta = off - scrollController.position.pixels;
@@ -99,6 +97,9 @@ class InfiniteListController<T> {
         }
       }
     }
+
+    // we didn't found one, we may have reached the bottom
+    if (items.isNotEmpty) return items.first;
 
     return null;
   }

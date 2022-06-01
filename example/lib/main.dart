@@ -37,11 +37,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     infiniteController = InfiniteListController(
-        events: events,
-        scrollController: scrollController,
-        getId: (String item) {
-          return item;
-        });
+        items: events, scrollController: scrollController);
 
     scrollController.addListener(scrollListener);
   }
@@ -68,7 +64,7 @@ class _HomePageState extends State<HomePage> {
 
   String? lastElement;
   void scrollListener() {
-    final el = infiniteController.getClosestElementToAlignement();
+    final el = infiniteController.getClosestElementToAlignment();
 
     if (el != lastElement) {
       setState(() {
@@ -82,20 +78,31 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         body: Stack(
       children: [
-        InfiniteListView<String>(
+        InfiniteListView(
             infiniteController: infiniteController,
             reversed: reversed,
-            itemBuilder: (int index, ItemPositions position) {
+            itemBuilder:
+                (BuildContext context, int index, ItemPositions position) {
               switch (position) {
                 case ItemPositions.start:
                   return const Text("Start");
                 case ItemPositions.item:
-                  return ListTile(
-                      onTap: () {
-                        infiniteController.setCenterEvent(events[index]);
-                        setState(() {});
-                      },
-                      title: Text(events[index]));
+                  return MaterialButton(
+                    onPressed: () {
+                      infiniteController.setCenterEvent(events[index]);
+                      setState(() {});
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                          color: Colors.blue,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(events[index],
+                                style: const TextStyle(color: Colors.white)),
+                          )),
+                    ),
+                  );
 
                 case ItemPositions.end:
                   return const Text("End");
@@ -134,17 +141,40 @@ class _HomePageState extends State<HomePage> {
             child: Card(
                 child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(lastElement ?? ''),
+              child: Text("Last element ${lastElement ?? ''}", maxLines: 1),
             ))),
         Positioned(
-            left: 20,
-            top: 80,
-            child: IconButton(
-              icon: const Icon(Icons.swipe),
-              onPressed: () {
-                //infiniteController.switchStart();
-              },
-            ))
+            right: 80,
+            top: 20,
+            child: Card(
+                child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                width: 200,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text("Experimentation box"),
+                    SwitchListTile(
+                        value: reversed,
+                        onChanged: (value) => setState(() {
+                              reversed = value;
+                            }),
+                        title: const Text("Reversed")),
+                    ListTile(
+                      title: const Text("Anchor"),
+                      subtitle: Text(infiniteController.centerEventId ?? ''),
+                    ),
+                    SwitchListTile(
+                        value: infiniteController.useFirstItemAsCenter,
+                        onChanged: (value) => setState(() {
+                              infiniteController.useFirstItemAsCenter = value;
+                            }),
+                        title: const Text("Add new item to bottom")),
+                  ],
+                ),
+              ),
+            )))
       ],
     ));
   }

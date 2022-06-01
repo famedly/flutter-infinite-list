@@ -7,7 +7,7 @@ enum ItemPositions { start, item, end }
 
 /// A list controller.
 /// By default, the item are added in the second list
-class InfiniteListView<T> extends StatelessWidget {
+class InfiniteListView extends StatelessWidget {
   const InfiniteListView(
       {Key? key,
       required this.itemBuilder,
@@ -15,8 +15,8 @@ class InfiniteListView<T> extends StatelessWidget {
       this.reversed = false})
       : super(key: key);
 
-  final Widget Function(int index, ItemPositions position) itemBuilder;
-  final InfiniteListController<T> infiniteController;
+  final Widget Function(BuildContext context, int index, ItemPositions position) itemBuilder;
+  final InfiniteListController infiniteController;
   final bool reversed;
 
   @override
@@ -55,7 +55,7 @@ class InfiniteListView<T> extends StatelessWidget {
               key: key,
               controller: infiniteController.scrollController,
               index: index,
-              child: itemBuilder(index, position),
+              child: itemBuilder(context, index, position),
             );
           },
                   childCount: infiniteController.startChildrenCount + 2,
@@ -85,7 +85,7 @@ class InfiniteListView<T> extends StatelessWidget {
                 key: key,
                 controller: infiniteController.scrollController,
                 index: index,
-                child: itemBuilder(index, position),
+                child: itemBuilder(context, index, position),
               );
             },
                 childCount: infiniteController.endChildrenCount + 2,
