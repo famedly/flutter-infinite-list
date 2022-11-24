@@ -15,7 +15,8 @@ class InfiniteListView extends StatelessWidget {
       this.reversed = false})
       : super(key: key);
 
-  final Widget Function(BuildContext context, int index, ItemPositions position) itemBuilder;
+  final Widget Function(BuildContext context, int index, ItemPositions position)
+      itemBuilder;
   final InfiniteListController infiniteController;
   final bool reversed;
 
@@ -26,70 +27,74 @@ class InfiniteListView extends StatelessWidget {
     return CustomScrollView(
         reverse: reversed,
         center: centerKey,
+        key: key,
         controller: infiniteController.scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: <Widget>[
           SliverList(
-              delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-            var position = ItemPositions.item;
-            late Key key;
-            if (index == 0) {
-              if (infiniteController.startChildrenCount == 0 ||
-                  infiniteController.endChildrenCount != 0) return Container();
-              position = ItemPositions.end;
-              key = const Key("startlist_end");
-            } else if (index == infiniteController.startChildrenCount + 1) {
-              // if we don't have element, the main list view will display the start element
-              if (infiniteController.startChildrenCount == 0) {
-                return Container();
-              }
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                var position = ItemPositions.item;
+                if (index == 0) {
+                  if (infiniteController.startChildrenCount == 0 ||
+                      infiniteController.endChildrenCount != 0) {
+                    return Container();
+                  }
+                  position = ItemPositions.end;
+                } else if (index == infiniteController.startChildrenCount + 1) {
+                  // if we don't have element, the main list view will display the start element
+                  if (infiniteController.startChildrenCount == 0) {
+                    return Container();
+                  }
 
-              position = ItemPositions.start;
-              key = const Key("startlist_start");
-            } else {
-              index = infiniteController.getStartIndex(index - 1);
-              key = ValueKey(index);
-            }
-            return AutoScrollTag(
-              key: key,
-              controller: infiniteController.scrollController,
-              index: index,
-              child: itemBuilder(context, index, position),
-            );
-          },
-                  childCount: infiniteController.startChildrenCount + 2,
-                  addAutomaticKeepAlives: true)),
+                  position = ItemPositions.start;
+                } else {
+                  index = infiniteController.getStartIndex(index - 1);
+                }
+
+                final item = itemBuilder(context, index, position);
+
+                return AutoScrollTag(
+                  key: item.key ?? ValueKey(index),
+                  controller: infiniteController.scrollController,
+                  index: index,
+                  child: item,
+                );
+              },
+              childCount: infiniteController.startChildrenCount + 2,
+              addAutomaticKeepAlives: true,
+            ),
+          ),
           SliverList(
             // Key parameter makes this list grow bottom
             key: centerKey,
             delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-              var position = ItemPositions.item;
+              (BuildContext context, int index) {
+                var position = ItemPositions.item;
 
-              late Key key;
-              if (index == 0) {
-                if (infiniteController.startChildrenCount != 0) {
-                  return Container();
+                if (index == 0) {
+                  if (infiniteController.startChildrenCount != 0) {
+                    return Container();
+                  }
+                  position = ItemPositions.start;
+                } else if (index == infiniteController.endChildrenCount + 1) {
+                  position = ItemPositions.end;
+                } else {
+                  index = infiniteController.getEndIndex(index - 1);
                 }
-                position = ItemPositions.start;
-                key = const Key("endlist_start");
-              } else if (index == infiniteController.endChildrenCount + 1) {
-                position = ItemPositions.end;
-                key = const Key("endlist_end");
-              } else {
-                index = infiniteController.getEndIndex(index - 1);
-                key = ValueKey(index);
-              }
-              return AutoScrollTag(
-                key: key,
-                controller: infiniteController.scrollController,
-                index: index,
-                child: itemBuilder(context, index, position),
-              );
-            },
-                childCount: infiniteController.endChildrenCount + 2,
-                addAutomaticKeepAlives: true),
+
+                final item = itemBuilder(context, index, position);
+
+                return AutoScrollTag(
+                  key: item.key ?? ValueKey(index),
+                  controller: infiniteController.scrollController,
+                  index: index,
+                  child: itemBuilder(context, index, position),
+                );
+              },
+              childCount: infiniteController.endChildrenCount + 2,
+              addAutomaticKeepAlives: true,
+            ),
           )
         ]);
   }
