@@ -27,16 +27,16 @@ code_quality:
 
 dry-run:
   stage: publish
-  image: dart
+  image: registry.gitlab.com/famedly/company/frontend/flutter-dockerimages/flutter/stable:latest
   script:
     - rm -rf ./docs
-    - dart pub get
-    - dart pub publish --dry-run
+    - flutter pub get
+    - flutter pub publish --dry-run
 
 
 pub-dev:
   stage: publish
-  image: dart
+  image: registry.gitlab.com/famedly/company/frontend/flutter-dockerimages/flutter/stable:latest
   dependencies: [
     dry-run
   ]
@@ -51,7 +51,7 @@ pub-dev:
       mkdir -p ~/.config/dart/
       cp "${PUB_DEV_CREDENTIALS}" ~/.config/dart/pub-credentials.json
       
-    - dart pub get
-    - dart pub publish --force
+    - flutter pub get
+    - flutter pub publish --force
   rules:
     - if: $CI_COMMIT_TAG
