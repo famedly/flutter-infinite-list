@@ -8,17 +8,19 @@ enum ItemPositions { start, item, end }
 /// A list controller.
 /// By default, the item are added in the second list
 class InfiniteListView extends StatelessWidget {
-  const InfiniteListView(
-      {Key? key,
-      required this.itemBuilder,
-      required this.infiniteController,
-      this.reversed = false})
-      : super(key: key);
+  const InfiniteListView({
+    Key? key,
+    required this.itemBuilder,
+    required this.infiniteController,
+    this.reversed = false,
+    this.physics = const AlwaysScrollableScrollPhysics(),
+  }) : super(key: key);
 
   final Widget Function(BuildContext context, int index, ItemPositions position)
       itemBuilder;
   final InfiniteListController infiniteController;
   final bool reversed;
+  final ScrollPhysics? physics;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class InfiniteListView extends StatelessWidget {
         center: centerKey,
         key: key,
         controller: infiniteController.scrollController,
-        physics: const AlwaysScrollableScrollPhysics(),
+        physics: physics,
         slivers: <Widget>[
           SliverList(
             delegate: SliverChildBuilderDelegate(
